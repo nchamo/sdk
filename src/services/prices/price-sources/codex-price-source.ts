@@ -66,7 +66,7 @@ export class CodexPriceSource implements IPriceSource {
     return Object.fromEntries(
       Object.entries(prices).map(([chainId, tokens]) => [
         chainId,
-        Object.fromEntries(Object.entries(tokens).map(([token, price]) => [token, Object.values(price).at(0)!])),
+        Object.fromEntries(Object.entries(tokens).map(([token, price]) => [token, Object.values(price)[0]!])),
       ])
     );
   }
