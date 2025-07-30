@@ -7,6 +7,4 @@ export * from './quotes';
 export * from './metadata';
 export * from './prices';
 export * from './logs';
-export * from './permit2';
-export * from './dca';
 export * from './blocks';

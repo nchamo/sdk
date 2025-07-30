@@ -1,7 +1,7 @@
 import { ChainId, TimeString, Timestamp, TokenAddress } from '@types';
 import { IFetchService } from '@services/fetch/types';
-import { PriceResult, IPriceSource, PricesQueriesSupport, TokenPrice, PriceInput } from '../types';
-import { Chains, getChainByKeyOrFail } from '@chains';
+import { PriceResult, IPriceSource, PricesQueriesSupport, PriceInput } from '../types';
+import { getChainByKey } from '@chains';
 import { reduceTimeout, timeoutPromise } from '@shared/timeouts';
 import { filterRejectedResults, groupByChain, isSameAddress, splitInChunks } from '@shared/utils';
 import { Addresses } from '@shared/constants';
@@ -103,11 +103,10 @@ export class AlchemyPriceSource implements IPriceSource {
         body: JSON.stringify({
           addresses: chunk.map((address) => ({
             network: ALCHEMY_NETWORKS[chainId].key,
-            // Alchemy doesn't support native tokens (only on Ethereum), so we use the wrapped native token
-            address:
-              isSameAddress(address, Addresses.NATIVE_TOKEN) && chainId !== Chains.ETHEREUM.chainId
-                ? getChainByKeyOrFail(chainId).wToken
-                : address,
+            address: isSameAddress(address, Addresses.NATIVE_TOKEN)
+              ? // Most chains don't support native tokens, so we use the wrapped native token when possible
+                getChainByKey(chainId)?.wToken ?? Addresses.ZERO_ADDRESS
+              : address,
           })),
         }),
         timeout,

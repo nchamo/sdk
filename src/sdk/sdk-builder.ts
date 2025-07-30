@@ -8,10 +8,7 @@ import { buildBalanceService, BuildBalancesParams } from './builders/balance-bui
 import { buildAllowanceService, BuildAllowanceParams } from './builders/allowance-builder';
 import { ISDK } from './types';
 import { BuildPriceParams, buildPriceService } from './builders/price-builder';
-import { buildPermit2Service } from './builders/permit2-builder';
-import { BuildDCAParams, buildDCAService } from './builders/dca-builder';
 import { BuildBlocksParams, buildBlocksService } from './builders/blocks-builder';
-import { BuildEarnParams, buildEarnService } from './builders/earn-builder';
 
 export function buildSDK<Params extends BuildParams = {}>(
   params?: Params
@@ -26,16 +23,6 @@ export function buildSDK<Params extends BuildParams = {}>(
   const metadataService = buildMetadataService<Params['metadata']>(params?.metadata, fetchService, providerService);
   const priceService = buildPriceService(params?.price, fetchService);
   const quoteService = buildQuoteService(params?.quotes, providerService, fetchService, gasService as any, metadataService as any, priceService);
-  const permit2Service = buildPermit2Service(quoteService, providerService, gasService as any);
-  const dcaService = buildDCAService(params?.dca, { providerService, permit2Service, quoteService, fetchService, priceService });
-  const earnService = buildEarnService(params?.earn, {
-    permit2Service,
-    quoteService,
-    providerService,
-    allowanceService,
-    fetchService,
-    balanceService,
-  });
 
   return {
     providerService,
@@ -47,9 +34,6 @@ export function buildSDK<Params extends BuildParams = {}>(
     priceService,
     quoteService,
     logsService,
-    permit2Service,
-    dcaService,
-    earnService,
     blocksService,
   };
 }
@@ -60,8 +44,6 @@ export type BuildParams = {
   balances?: BuildBalancesParams;
   allowances?: BuildAllowanceParams;
   gas?: BuildGasParams;
-  dca?: BuildDCAParams;
-  earn?: BuildEarnParams;
   metadata?: BuildMetadataParams;
   price?: BuildPriceParams;
   quotes?: BuildQuoteParams;

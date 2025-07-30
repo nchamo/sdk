@@ -13,6 +13,5 @@
     "resolveJsonModule": true
   },
   "extends": "../tsconfig.json",
-  "include": ["./integration", ".", "./test"],
-  "files": ["../hardhat.config.ts"]
+  "include": ["./integration", ".", "./test"]
 }
