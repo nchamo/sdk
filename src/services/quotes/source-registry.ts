@@ -19,7 +19,6 @@ import { XYFinanceQuoteSource } from './quote-sources/xy-finance-quote-source';
 import { FlyTradeQuoteSource } from './quote-sources/fly-trade-quote-source';
 import { SquidQuoteSource } from './quote-sources/squid-quote-source';
 import { ConveyorQuoteSource } from './quote-sources/conveyor-quote-source';
-import { OkuQuoteSource } from './quote-sources/oku-quote-source';
 import { EnsoQuoteSource } from './quote-sources/enso-quote-source';
 import { BrainDexQuoteSource } from './quote-sources/braindex-quote-source';
 import { SovrynQuoteSource } from './quote-sources/sovryn-quote-source';
@@ -46,7 +45,6 @@ export const QUOTE_SOURCES = {
   rango: new RangoQuoteSource(),
   changelly: new ChangellyQuoteSource(),
   balmy: new BalmyQuoteSource(),
-  oku: new OkuQuoteSource(),
   ['fly-trade']: new FlyTradeQuoteSource(),
   squid: new SquidQuoteSource(),
   'portals-fi': new PortalsFiQuoteSource(),

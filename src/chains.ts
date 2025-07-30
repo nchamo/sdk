@@ -99,7 +99,6 @@ export const Chains = {
       'https://polygon-mainnet.public.blastapi.io',
       'https://rpc.ankr.com/polygon',
       'https://rpc-mainnet.matic.quiknode.pro',
-      'https://matic-mainnet.chainstacklabs.com',
       'https://polygon-pokt.nodies.app',
     ],
     explorer: 'https://polygonscan.com/',
@@ -486,7 +485,13 @@ export const Chains = {
     ids: ['scroll'],
     nativeCurrency: { symbol: 'ETH', name: 'Ethereum' },
     wToken: '0x5300000000000000000000000000000000000004',
-    publicRPCs: ['https://scroll-mainnet.chainstacklabs.com', 'https://rpc.ankr.com/scroll', 'https://rpc.scroll.io', 'https://1rpc.io/scroll'],
+    publicRPCs: [
+      'https://rpc.ankr.com/scroll',
+      'https://rpc.scroll.io',
+      'https://1rpc.io/scroll',
+      'https://scroll.therpc.io',
+      'https://scroll-rpc.publicnode.com',
+    ],
     explorer: 'https://scrollscan.com/',
   },
   MANTLE: {

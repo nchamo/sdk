@@ -103,11 +103,7 @@ export class AlchemyPriceSource implements IPriceSource {
         body: JSON.stringify({
           addresses: chunk.map((address) => ({
             network: ALCHEMY_NETWORKS[chainId].key,
-            // Alchemy doesn't support native tokens (only on Ethereum), so we use the wrapped native token
-            address:
-              isSameAddress(address, Addresses.NATIVE_TOKEN) && chainId !== Chains.ETHEREUM.chainId
-                ? getChainByKeyOrFail(chainId).wToken
-                : address,
+            address: isSameAddress(address, Addresses.NATIVE_TOKEN) ? Addresses.ZERO_ADDRESS : address,
           })),
         }),
         timeout,
