@@ -1,5 +1,4 @@
-import { chainsUnion } from '@chains';
-import { QUOTE_SOURCES, SourceConfig, SourceWithConfigId } from '@services/quotes/source-registry';
+import { SourceConfig } from '@services/quotes/source-registry';
 
 export const CONFIG: SourceConfig = {
   global: {
@@ -68,13 +67,4 @@ export enum Test {
 export const EXCEPTIONS: Partial<Record<string, Test[]>> = {
   uniswap: [Test.WRAP_NATIVE_TOKEN, Test.UNWRAP_WTOKEN],
   kyberswap: [Test.WRAP_NATIVE_TOKEN, Test.UNWRAP_WTOKEN],
-  sovryn: [Test.WRAP_NATIVE_TOKEN, Test.UNWRAP_WTOKEN],
-  balmy: [
-    Test.SELL_RANDOM_ERC20_TO_STABLE,
-    Test.SELL_STABLE_TO_NATIVE,
-    Test.SELL_NATIVE_TO_RANDOM_ERC20,
-    Test.SELL_NATIVE_TO_STABLE_AND_TRANSFER,
-    Test.BUY_NATIVE_WITH_STABLE,
-    Test.BUY_RANDOM_ERC20_WITH_STABLE,
-  ],
 };

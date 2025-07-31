@@ -57,7 +57,6 @@ describe('Token Price Sources', () => {
   // priceSourceTest({ title: 'Prioritized Source', source: PRIORITIZED_PRICE_SOURCE });
   // priceSourceTest({ title: 'Fastest Source', source: FASTEST_PRICE_SOURCE });
   // priceSourceTest({ title: 'Aggregator Source', source: AGGREGATOR_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Balmy', source: BALMY_PRICE_SOURCE }); Needs API key
   // priceSourceTest({ title: 'Coingecko Source', source: COINGECKO_TOKEN_SOURCE }); Commented out because of rate limiting issues
   // priceSourceTest({ title: 'Codex Source', source: CODEX_PRICE_SOURCE }); Commented out because of rate limiting issues
   priceSourceTest({ title: 'Alchemy Source', source: ALCHEMY_PRICE_SOURCE });
