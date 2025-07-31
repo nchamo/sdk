@@ -11,7 +11,6 @@ import { LiFiQuoteSource } from './quote-sources/li-fi-quote-source';
 import { KyberswapQuoteSource } from './quote-sources/kyberswap-quote-source';
 import { RangoQuoteSource } from './quote-sources/rango-quote-source';
 import { ChangellyQuoteSource } from './quote-sources/changelly-quote-source';
-import { BalmyQuoteSource } from './quote-sources/balmy-quote-source';
 import { PortalsFiQuoteSource } from './quote-sources/portals-fi-quote-source';
 import { OKXDexQuoteSource } from './quote-sources/okx-dex-quote-source';
 import { BebopQuoteSource } from './quote-sources/bebop-quote-source';
@@ -21,10 +20,8 @@ import { SquidQuoteSource } from './quote-sources/squid-quote-source';
 import { ConveyorQuoteSource } from './quote-sources/conveyor-quote-source';
 import { EnsoQuoteSource } from './quote-sources/enso-quote-source';
 import { BrainDexQuoteSource } from './quote-sources/braindex-quote-source';
-import { SovrynQuoteSource } from './quote-sources/sovryn-quote-source';
 import { BarterQuoteSource } from './quote-sources/barter-quote-source';
 import { DodoDexQuoteSource } from './quote-sources/dodo-quote-source';
-import { BalancerQuoteSource } from './quote-sources/balancer-quote-source';
 import { SwingQuoteSource } from './quote-sources/swing-quote-source';
 import { SushiswapQuoteSource } from './quote-sources/sushiswap-quote-source';
 
@@ -41,10 +38,8 @@ export const QUOTE_SOURCES = {
   odos: new OdosQuoteSource(),
   braindex: new BrainDexQuoteSource(),
   barter: new BarterQuoteSource(),
-  sovryn: new SovrynQuoteSource(),
   rango: new RangoQuoteSource(),
   changelly: new ChangellyQuoteSource(),
-  balmy: new BalmyQuoteSource(),
   ['fly-trade']: new FlyTradeQuoteSource(),
   squid: new SquidQuoteSource(),
   'portals-fi': new PortalsFiQuoteSource(),
@@ -52,7 +47,6 @@ export const QUOTE_SOURCES = {
   'okx-dex': new OKXDexQuoteSource(),
   conveyor: new ConveyorQuoteSource(),
   dodo: new DodoDexQuoteSource(),
-  balancer: new BalancerQuoteSource(),
   swing: new SwingQuoteSource(),
   sushiswap: new SushiswapQuoteSource(),
 } satisfies Record<SourceId, IQuoteSource<QuoteSourceSupport, any>>;

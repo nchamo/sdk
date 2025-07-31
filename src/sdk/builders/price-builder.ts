@@ -9,7 +9,7 @@ import { CoingeckoPriceSource } from '@services/prices/price-sources/coingecko-p
 import { PrioritizedPriceSource } from '@services/prices/price-sources/prioritized-price-source';
 import { FastestPriceSource } from '@services/prices/price-sources/fastest-price-source';
 import { AggregatorPriceSource, PriceAggregationMethod } from '@services/prices/price-sources/aggregator-price-source';
-import { BalmyPriceSource } from '@services/prices/price-sources/balmy-price-source';
+
 import { CodexPriceSource } from '@services/prices/price-sources/codex-price-source';
 import { AlchemyPriceSource } from '@services/prices/price-sources/alchemy-price-source';
 import { AlchemySupportedChains } from '@services/providers/provider-sources/alchemy-provider';
@@ -19,7 +19,6 @@ export type PriceSourceInput =
   | { type: 'odos' }
   | { type: 'alchemy'; apiKey: string; onChains?: AlchemySupportedChains }
   | { type: 'coingecko' }
-  | { type: 'balmy'; apiKey: string }
   | { type: 'prioritized'; sources: PriceSourceInput[] }
   | { type: 'fastest'; sources: PriceSourceInput[] }
   | { type: 'aggregate'; sources: PriceSourceInput[]; by: PriceAggregationMethod }
@@ -47,8 +46,6 @@ function buildSource(source: PriceSourceInput | undefined, { fetchService }: { f
       return defiLlama;
     case 'odos':
       return new OdosPriceSource(fetchService);
-    case 'balmy':
-      return new BalmyPriceSource(fetchService, source.apiKey);
     case 'coingecko':
       return coingecko;
     case 'cached':

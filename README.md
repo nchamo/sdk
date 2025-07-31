@@ -1,19 +1,19 @@
-# Balmy SDK
+# Web3 SDK
 
-A comprehensive TypeScript SDK for interacting with the Balmy protocol and various blockchain networks.
+A comprehensive TypeScript SDK for interacting with the different contracts and accounts accross multiple networks.
 
 ## 🧪 Installation
 
 ### Yarn
 
 ```bash
-yarn add @balmy/sdk
+yarn add @nchamo/sdk
 ```
 
 ### NPM
 
 ```bash
-npm install @balmy/sdk
+npm install @nchamo/sdk
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ npm install @balmy/sdk
 ### 👷🏽‍♀️ Building the SDK
 
 ```typescript
-import { buildSDK } from "@balmy/sdk";
+import { buildSDK } from "@nchamo/sdk";
 
 const sdk = buildSDK(config);
 ```
@@ -86,7 +86,7 @@ const allQuotes = await sdk.quoteService.getAllQuotesWithTxs({
 
 ## Overview
 
-The Balmy SDK is a comprehensive TypeScript library that provides a unified interface for interacting with the Balmy protocol and various blockchain networks. The Balmy SDK allows you to interact with the Balmy protocol, providing efficient tools to manage token balances, retrieve trade quotes from DEX aggregators, and check token holdings across multiple chains. It's designed to be modular, with each functionality organized into specialized services that handle specific aspects of blockchain interaction.
+The Web3 SDK provides efficient tools to manage token balances, retrieve trade quotes from DEX aggregators, and check token holdings across multiple chains. It's designed to be modular, with each functionality organized into specialized services that handle specific aspects of blockchain interaction.
 
 ### Available Services
 
@@ -819,5 +819,3 @@ yarn install
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-### [Docs](https://docs.balmy.xyz) | [X](https://x.com/balmy_xyz) | [Discord](http://discord.balmy.xyz/)
