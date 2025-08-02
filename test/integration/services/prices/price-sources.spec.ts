@@ -51,12 +51,12 @@ jest.retryTimes(2);
 jest.setTimeout(ms('1m'));
 
 describe('Token Price Sources', () => {
-  // priceSourceTest({ title: 'Defi Llama Source', source: DEFI_LLAMA_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Odos Source', source: ODOS_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Cached Price Source', source: CACHED_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Prioritized Source', source: PRIORITIZED_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Fastest Source', source: FASTEST_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Aggregator Source', source: AGGREGATOR_PRICE_SOURCE });
+  priceSourceTest({ title: 'Defi Llama Source', source: DEFI_LLAMA_PRICE_SOURCE });
+  priceSourceTest({ title: 'Odos Source', source: ODOS_PRICE_SOURCE });
+  priceSourceTest({ title: 'Cached Price Source', source: CACHED_PRICE_SOURCE });
+  priceSourceTest({ title: 'Prioritized Source', source: PRIORITIZED_PRICE_SOURCE });
+  priceSourceTest({ title: 'Fastest Source', source: FASTEST_PRICE_SOURCE });
+  priceSourceTest({ title: 'Aggregator Source', source: AGGREGATOR_PRICE_SOURCE });
   // priceSourceTest({ title: 'Coingecko Source', source: COINGECKO_TOKEN_SOURCE }); Commented out because of rate limiting issues
   // priceSourceTest({ title: 'Codex Source', source: CODEX_PRICE_SOURCE }); Commented out because of rate limiting issues
   priceSourceTest({ title: 'Alchemy Source', source: ALCHEMY_PRICE_SOURCE });
