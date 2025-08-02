@@ -2,8 +2,8 @@ import { ChainId, TimeString, Timestamp, TokenAddress } from '@types';
 import { IFetchService } from '@services/fetch/types';
 import { PriceResult, IPriceSource, PricesQueriesSupport, PriceInput } from '../types';
 import { getChainByKey } from '@chains';
-import { reduceTimeout, timeoutPromise } from '@shared/timeouts';
-import { filterRejectedResults, groupByChain, isSameAddress, splitInChunks } from '@shared/utils';
+import { reduceTimeout } from '@shared/timeouts';
+import { filterRejectedResults, groupByChain, isSameAddress } from '@shared/utils';
 import { Addresses } from '@shared/constants';
 import { ALCHEMY_NETWORKS } from '@shared/alchemy';
 import { alchemySupportedChains, AlchemySupportedChains } from '@services/providers/provider-sources/alchemy-provider';
@@ -54,13 +54,19 @@ export class AlchemyPriceSource implements IPriceSource {
     tokens: PriceInput[];
     config: { timeout?: TimeString } | undefined;
   }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    const groupedByChain = groupByChain(tokens, ({ token }) => token);
+    const chunks = generateChunks(tokens);
     const reducedTimeout = reduceTimeout(config?.timeout, '100');
-    const promises = Object.entries(groupedByChain).map(async ([chainId, tokens]) => [
-      Number(chainId),
-      await timeoutPromise(this.getCurrentPricesInChain(Number(chainId), tokens, reducedTimeout), reducedTimeout),
-    ]);
-    return Object.fromEntries(await filterRejectedResults(promises));
+    const promises = chunks.map((chunk) => this.getCurrentPricesInChunk(chunk, reducedTimeout));
+    const pricesResults = await filterRejectedResults(promises);
+
+    const result: Record<ChainId, Record<TokenAddress, PriceResult>> = {};
+    for (const { chainId, token, price, closestTimestamp } of pricesResults.flat()) {
+      if (!result[chainId]) {
+        result[chainId] = {};
+      }
+      result[chainId][token] = { price, closestTimestamp };
+    }
+    return result;
   }
 
   getHistoricalPrices(_: {
@@ -92,41 +98,60 @@ export class AlchemyPriceSource implements IPriceSource {
     return Promise.reject(new Error('Operation not supported'));
   }
 
-  private async getCurrentPricesInChain(chainId: ChainId, addresses: TokenAddress[], timeout?: TimeString) {
+  private async getCurrentPricesInChunk(chunk: PriceInput[], timeout?: TimeString) {
     const url = `https://api.g.alchemy.com/prices/v1/${this.apiKey}/tokens/by-address`;
-    const result: Record<TokenAddress, PriceResult> = {};
-    const chunks = splitInChunks(addresses, 25);
-    const promises = chunks.map(async (chunk) => {
-      const response = await this.fetch.fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          addresses: chunk.map((address) => ({
-            network: ALCHEMY_NETWORKS[chainId].key,
-            address: isSameAddress(address, Addresses.NATIVE_TOKEN)
-              ? // Most chains don't support native tokens, so we use the wrapped native token when possible
-                getChainByKey(chainId)?.wToken ?? Addresses.ZERO_ADDRESS
-              : address,
-          })),
-        }),
-        timeout,
-      });
+    const response = await this.fetch.fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        addresses: chunk.map(({ chainId, token }) => ({
+          network: ALCHEMY_NETWORKS[chainId].key,
+          address: isSameAddress(token, Addresses.NATIVE_TOKEN)
+            ? // Most chains don't support native tokens, so we use the wrapped native token when possible
+              getChainByKey(chainId)?.wToken ?? Addresses.ZERO_ADDRESS
+            : token,
+        })),
+      }),
+      timeout,
+    });
 
-      if (!response.ok) {
-        return;
-      }
-      const body: Response = await response.json();
-      chunk.forEach((address, index) => {
+    if (!response.ok) {
+      return [];
+    }
+    const body: Response = await response.json();
+    return chunk
+      .map(({ chainId, token }, index) => {
         const tokenPrice = body.data[index].prices[0];
         if (!tokenPrice) return;
         const timestamp = Math.floor(new Date(tokenPrice.lastUpdatedAt).getTime() / 1000);
-        result[address] = { price: Number(tokenPrice.value), closestTimestamp: timestamp };
-      });
-    });
-
-    await Promise.all(promises);
-    return result;
+        return { chainId, token, price: Number(tokenPrice.value), closestTimestamp: timestamp };
+      })
+      .filter((result): result is { chainId: ChainId; token: TokenAddress; price: number; closestTimestamp: Timestamp } => result !== undefined);
   }
+}
+
+function generateChunks(tokens: PriceInput[]) {
+  const groupedByChain = groupByChain(tokens, ({ token }) => token);
+  const tokensSortedByChain = Object.entries(groupedByChain)
+    .sort(([, tokensA], [, tokensB]) => tokensB.length - tokensA.length) // Sort by chain with most tokens, descending
+    .flatMap(([chainId, tokens]) => tokens.map((token) => ({ chainId: Number(chainId), token })));
+
+  const chunks: PriceInput[][] = [];
+  let chunk: PriceInput[] = [];
+  let chainsInChunk: Set<ChainId> = new Set();
+  for (const token of tokensSortedByChain) {
+    if (chunk.length === 25 || (chainsInChunk.size === 3 && !chainsInChunk.has(token.chainId))) {
+      chunks.push(chunk);
+      chunk = [];
+      chainsInChunk = new Set();
+    }
+    chunk.push(token);
+    chainsInChunk.add(token.chainId);
+  }
+  if (chunk.length > 0) {
+    chunks.push(chunk);
+  }
+  return chunks;
 }
 
 type Response = { data: { address: TokenAddress; prices: { currency: string; value: string; lastUpdatedAt: string }[] }[] };
