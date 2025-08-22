@@ -3,8 +3,9 @@ import { IBlocksService, IBlocksSource } from '@services/blocks';
 import { DefiLlamaBlockSource } from '@services/blocks/block-sources/defi-llama-block-source';
 import { BlocksService } from '@services/blocks/block-service';
 import { IProviderService } from '@services/providers';
+import { RPCBlockSource } from '@services/blocks/block-sources/rpc-block-source';
 
-export type BlocksSourceInput = { type: 'custom'; instance: IBlocksSource } | { type: 'defi-llama' };
+export type BlocksSourceInput = { type: 'custom'; instance: IBlocksSource } | { type: 'defi-llama' } | { type: 'rpc' };
 export type BuildBlocksParams = { source: BlocksSourceInput };
 
 export function buildBlocksService(
@@ -24,6 +25,8 @@ function buildSource(
     case undefined:
     case 'defi-llama':
       return new DefiLlamaBlockSource(fetchService, providerService);
+    case 'rpc':
+      return new RPCBlockSource(providerService);
     case 'custom':
       return source.instance;
   }
