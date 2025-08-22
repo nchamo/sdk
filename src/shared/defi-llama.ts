@@ -160,6 +160,9 @@ export class DefiLlamaClient {
     const chainKey = CHAIN_ID_TO_KEY[chainId];
     if (!chainKey) throw new Error(`Chain with id ${chainId} not supported`);
     const result = await this.fetch.fetch(`https://coins.llama.fi/block/${chainKey}/${timestamp}`);
+    if (!result.ok) {
+      throw new Error(`Failed to fetch the timestamp for chain with id ${chainId} and timestamp ${timestamp}`);
+    }
     const { height, timestamp: blockTimestamp } = await result.json();
     return { block: BigInt(height), timestamp: blockTimestamp };
   }
