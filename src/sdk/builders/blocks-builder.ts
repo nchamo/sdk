@@ -4,8 +4,13 @@ import { DefiLlamaBlockSource } from '@services/blocks/block-sources/defi-llama-
 import { BlocksService } from '@services/blocks/block-service';
 import { IProviderService } from '@services/providers';
 import { RPCBlockSource } from '@services/blocks/block-sources/rpc-block-source';
+import { FallbackBlockSource } from '@services/blocks/block-sources/fallback-block-source';
 
-export type BlocksSourceInput = { type: 'custom'; instance: IBlocksSource } | { type: 'defi-llama' } | { type: 'rpc' };
+export type BlocksSourceInput =
+  | { type: 'custom'; instance: IBlocksSource }
+  | { type: 'defi-llama' }
+  | { type: 'rpc' }
+  | { type: 'fallback'; sources: BlocksSourceInput[] };
 export type BuildBlocksParams = { source: BlocksSourceInput };
 
 export function buildBlocksService(
@@ -27,6 +32,8 @@ function buildSource(
       return new DefiLlamaBlockSource(fetchService, providerService);
     case 'rpc':
       return new RPCBlockSource(providerService);
+    case 'fallback':
+      return new FallbackBlockSource(source.sources.map((source) => buildSource(source, { fetchService, providerService })));
     case 'custom':
       return source.instance;
   }
