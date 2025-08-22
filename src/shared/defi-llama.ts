@@ -19,7 +19,6 @@ const CHAIN_ID_TO_KEY: Record<ChainId, Lowercase<string>> = {
   [Chains.CRONOS.chainId]: 'cronos',
   [Chains.BOBA.chainId]: 'boba',
   [Chains.MOONRIVER.chainId]: 'moonriver',
-  [Chains.OKC.chainId]: 'okexchain',
   [Chains.ONTOLOGY.chainId]: 'ontology',
   [Chains.KAIA.chainId]: 'klaytn',
   [Chains.AURORA.chainId]: 'aurora',
