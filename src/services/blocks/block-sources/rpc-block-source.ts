@@ -3,6 +3,7 @@ import { ChainId, Timestamp } from '@types';
 import { IProviderService } from '@services/providers';
 import { groupByChain } from '@shared/utils';
 import { BlockInput, BlockResult, IBlocksSource } from '../types';
+import { closestBlock } from './utils';
 
 export class RPCBlockSource implements IBlocksSource {
   constructor(private readonly providerService: IProviderService) {}
@@ -144,12 +145,6 @@ async function findClosestBlockToTimestamp({
   }
 
   return closestBlock(fromBlock, toBlock, timestamp);
-}
-
-function closestBlock(blockA: BlockResult, blockB: BlockResult, timestamp: Timestamp) {
-  const diffA = Math.abs(blockA.timestamp - timestamp);
-  const diffB = Math.abs(blockB.timestamp - timestamp);
-  return diffA <= diffB ? blockA : blockB;
 }
 
 // Instead of doing an ordinary binary search, we will try to do something smarter. Blockchains tend to produce blocks at a certain frequency so, if we have two

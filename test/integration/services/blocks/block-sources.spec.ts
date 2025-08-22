@@ -11,6 +11,7 @@ import { BlockResult, IBlocksSource } from '@services/blocks';
 import { ProviderService } from '@services/providers/provider-service';
 import { PublicRPCsProviderSource } from '@services/providers/provider-sources/public-rpcs-provider';
 import { FallbackBlockSource } from '@services/blocks/block-sources/fallback-block-source';
+import { AlchemyBlockSource } from '@services/blocks/block-sources/alchemy-block-source';
 dotenv.config();
 chai.use(chaiAsPromised);
 
@@ -18,6 +19,7 @@ const TESTS: Record<ChainId, Timestamp[]> = {
   [Chains.OPTIMISM.chainId]: [1672531200], // Sunday, January 1, 2023 12:00:00 AM
   [Chains.POLYGON.chainId]: [1651363200], // Sunday, May 1, 2022 12:00:00 AM
   [Chains.ARBITRUM.chainId]: [
+    1672531200, // Sunday, January 1, 2023 12:00:00 AM
     1717200000, // Saturday, June 1, 2024 12:00:00 AM
     1681108210, // Monday, April 10, 2023 6:30:10 AM
   ],
@@ -31,7 +33,12 @@ const PROVIDER_SERVICE = new ProviderService({ source: new PublicRPCsProviderSou
 const FETCH_SERVICE = new FetchService();
 const DEFI_LLAMA_BLOCKS_SOURCE = new DefiLlamaBlockSource(FETCH_SERVICE, PROVIDER_SERVICE);
 const RPC_BLOCKS_SOURCE = new RPCBlockSource(PROVIDER_SERVICE);
-const FALLBACK_METADATA_SOURCE = new FallbackBlockSource([RPC_BLOCKS_SOURCE, DEFI_LLAMA_BLOCKS_SOURCE]);
+const FALLBACK_BLOCK_SOURCE = new FallbackBlockSource([RPC_BLOCKS_SOURCE, DEFI_LLAMA_BLOCKS_SOURCE]);
+const ALCHEMY_BLOCK_SOURCE = new AlchemyBlockSource({
+  key: process.env.ALCHEMY_API_KEY!,
+  fetchService: FETCH_SERVICE,
+  providerService: PROVIDER_SERVICE,
+});
 
 jest.retryTimes(2);
 jest.setTimeout(ms('2m'));
@@ -39,7 +46,8 @@ jest.setTimeout(ms('2m'));
 describe('Blocks Sources', () => {
   // blocksSourceTest({ title: 'Defi Llama Source', source: DEFI_LLAMA_BLOCKS_SOURCE }); DefiLlama is not passing tests since they sometimes return a block that is not exactly the closed, but the second closest
   blocksSourceTest({ title: 'RPC Source', source: RPC_BLOCKS_SOURCE });
-  blocksSourceTest({ title: 'Fallback Source', source: FALLBACK_METADATA_SOURCE });
+  blocksSourceTest({ title: 'Fallback Source', source: FALLBACK_BLOCK_SOURCE });
+  blocksSourceTest({ title: 'Alchemy Source', source: ALCHEMY_BLOCK_SOURCE });
 
   function blocksSourceTest({ title, source }: { title: string; source: IBlocksSource }) {
     describe(title, () => {
