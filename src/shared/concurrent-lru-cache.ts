@@ -70,6 +70,10 @@ export class ConcurrentLRUCache<Key extends ValidKey, Value> {
   invalidate(keys: Key[]) {
     return this.cache.invalidate(keys);
   }
+
+  populate(values: Record<Key, Value>) {
+    this.cache.populate(values);
+  }
 }
 
 export class ConcurrentLRUCacheWithContext<Context, Key extends ValidKey, Value> {
