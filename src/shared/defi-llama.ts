@@ -268,7 +268,8 @@ function splitCoinsIntoBatches(searchWidth: string | undefined, aggregatedByToke
       if (Object.keys(inBatch).length > 0) {
         // If was something on the batch already, then close the batch
         batches.push(toURL(inBatch));
-        inBatch = {};
+        // Start the new batch with the token in it
+        inBatch = { [tokenId]: timestamps };
       } else {
         // If there was nothing already on the batch, then we have a token too big for a batch, we'll need to split it
         const chunks = splitInChunks(timestamps, 140);

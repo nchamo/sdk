@@ -49,7 +49,6 @@ export class CoingeckoPriceSource implements IPriceSource {
     const support: PricesQueriesSupport = {
       getCurrentPrices: true,
       getHistoricalPrices: false,
-      getBulkHistoricalPrices: false,
       getChart: false,
     };
     const entries = Object.keys(COINGECKO_CHAIN_KEYS)
@@ -75,16 +74,6 @@ export class CoingeckoPriceSource implements IPriceSource {
   }
 
   getHistoricalPrices(_: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth: TimeString | undefined;
-    config: { timeout?: TimeString } | undefined;
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    // TODO: Add support
-    return Promise.reject(new Error('Operation not supported'));
-  }
-
-  getBulkHistoricalPrices(_: {
     tokens: { chainId: ChainId; token: TokenAddress; timestamp: Timestamp }[];
     searchWidth: TimeString | undefined;
     config: { timeout?: TimeString } | undefined;

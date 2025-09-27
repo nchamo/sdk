@@ -32,21 +32,6 @@ export class CachedPriceSource implements IPriceSource {
 
   getHistoricalPrices({
     tokens,
-    timestamp,
-    searchWidth,
-    config,
-  }: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth?: TimeString;
-    config?: { timeout?: TimeString };
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    // TODO: Support caching, but make it configurable
-    return this.source.getHistoricalPrices({ tokens, timestamp, searchWidth, config });
-  }
-
-  getBulkHistoricalPrices({
-    tokens,
     searchWidth,
     config,
   }: {
@@ -55,7 +40,7 @@ export class CachedPriceSource implements IPriceSource {
     config: { timeout?: TimeString } | undefined;
   }): Promise<Record<ChainId, Record<TokenAddress, Record<Timestamp, PriceResult>>>> {
     // TODO: Support caching, but make it configurable
-    return this.source.getBulkHistoricalPrices({ tokens, searchWidth, config });
+    return this.source.getHistoricalPrices({ tokens, searchWidth, config });
   }
 
   async getChart({

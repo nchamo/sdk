@@ -47,7 +47,6 @@ export class CodexPriceSource implements IPriceSource {
     const support: PricesQueriesSupport = {
       getCurrentPrices: true,
       getHistoricalPrices: true,
-      getBulkHistoricalPrices: true,
       getChart: false,
     };
     const entries = SUPPORTED_CHAINS.map(({ chainId }) => chainId).map((chainId) => [chainId, support]);
@@ -71,28 +70,7 @@ export class CodexPriceSource implements IPriceSource {
     );
   }
 
-  async getHistoricalPrices({
-    tokens,
-    timestamp,
-    searchWidth,
-    config,
-  }: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth: TimeString | undefined;
-    config: { timeout?: TimeString } | undefined;
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    const input = tokens.map(({ token, chainId }) => ({ chainId, token, timestamp }));
-    const prices = await this.getBulkHistoricalPrices({ tokens: input, searchWidth, config });
-    return Object.fromEntries(
-      Object.entries(prices).map(([chainId, tokens]) => [
-        chainId,
-        Object.fromEntries(Object.entries(tokens).map(([token, price]) => [token, price[timestamp]])),
-      ])
-    );
-  }
-
-  getBulkHistoricalPrices({
+  getHistoricalPrices({
     tokens,
     searchWidth,
     config,

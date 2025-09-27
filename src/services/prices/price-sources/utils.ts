@@ -56,7 +56,6 @@ export function combineSupport(sources: IPriceSource[]): Record<ChainId, PricesQ
       result[chainId] = {
         getCurrentPrices: current.getCurrentPrices || support.getCurrentPrices,
         getHistoricalPrices: current.getHistoricalPrices || support.getHistoricalPrices,
-        getBulkHistoricalPrices: current.getBulkHistoricalPrices || support.getBulkHistoricalPrices,
         getChart: current.getChart || support.getChart,
       };
     }

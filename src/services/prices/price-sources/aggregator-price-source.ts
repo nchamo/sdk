@@ -31,33 +31,6 @@ export class AggregatorPriceSource implements IPriceSource {
 
   async getHistoricalPrices({
     tokens,
-    timestamp,
-    searchWidth,
-    config,
-  }: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth?: TimeString;
-    config?: { timeout?: TimeString };
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    const collected = await collectAllResults({
-      allSources: this.sources,
-      fullRequest: tokens,
-      query: 'getHistoricalPrices',
-      getResult: (source, filteredRequest, sourceTimeout) =>
-        source.getHistoricalPrices({
-          tokens: filteredRequest,
-          timestamp,
-          searchWidth,
-          config: { timeout: sourceTimeout },
-        }),
-      timeout: config?.timeout,
-    });
-    return this.aggregate(collected, aggregatePrices);
-  }
-
-  async getBulkHistoricalPrices({
-    tokens,
     searchWidth,
     config,
   }: {
@@ -68,9 +41,9 @@ export class AggregatorPriceSource implements IPriceSource {
     const collected = await collectAllResults({
       allSources: this.sources,
       fullRequest: tokens,
-      query: 'getBulkHistoricalPrices',
+      query: 'getHistoricalPrices',
       getResult: (source, filteredRequest, sourceTimeout) =>
-        source.getBulkHistoricalPrices({
+        source.getHistoricalPrices({
           tokens: filteredRequest,
           searchWidth,
           config: { timeout: sourceTimeout },
