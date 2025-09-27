@@ -39,7 +39,6 @@ export type IPriceService = {
 };
 
 export type PricesQueriesSupport = {
-  getBulkHistoricalPrices: boolean;
   getHistoricalPrices: boolean;
   getCurrentPrices: true;
   getChart: boolean;
@@ -54,12 +53,6 @@ export type IPriceSource = {
     config: { timeout?: TimeString } | undefined;
   }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>>;
   getHistoricalPrices(_: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth: TimeString | undefined;
-    config: { timeout?: TimeString } | undefined;
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>>;
-  getBulkHistoricalPrices(_: {
     tokens: { chainId: ChainId; token: TokenAddress; timestamp: Timestamp }[];
     searchWidth: TimeString | undefined;
     config: { timeout?: TimeString } | undefined;

@@ -16,6 +16,7 @@ import { FastestPriceSource } from '@services/prices/price-sources/fastest-price
 import { AggregatorPriceSource } from '@services/prices/price-sources/aggregator-price-source';
 import { CodexPriceSource } from '@services/prices/price-sources/codex-price-source';
 import { AlchemyPriceSource } from '@services/prices/price-sources/alchemy-price-source';
+import { BatchPriceSource } from '@services/prices/price-sources/batch-price-source';
 chai.use(chaiAsPromised);
 dotenv.config();
 
@@ -45,7 +46,8 @@ const ALCHEMY_PRICE_SOURCE = new AlchemyPriceSource({
 const PRIORITIZED_PRICE_SOURCE = new PrioritizedPriceSource([ODOS_PRICE_SOURCE, DEFI_LLAMA_PRICE_SOURCE]);
 const FASTEST_PRICE_SOURCE = new FastestPriceSource([ODOS_PRICE_SOURCE, DEFI_LLAMA_PRICE_SOURCE]);
 const AGGREGATOR_PRICE_SOURCE = new AggregatorPriceSource([ODOS_PRICE_SOURCE, DEFI_LLAMA_PRICE_SOURCE], 'median');
-const COINGECKO_TOKEN_SOURCE = new CoingeckoPriceSource(FETCH_SERVICE);
+const BATCH_PRICE_SOURCE = new BatchPriceSource(DEFI_LLAMA_PRICE_SOURCE, { maxSize: 1000, maxDelay: '1s' });
+const COINGECKO_PRICE_SOURCE = new CoingeckoPriceSource(FETCH_SERVICE);
 
 jest.retryTimes(2);
 jest.setTimeout(ms('1m'));
@@ -57,9 +59,10 @@ describe('Token Price Sources', () => {
   priceSourceTest({ title: 'Prioritized Source', source: PRIORITIZED_PRICE_SOURCE });
   priceSourceTest({ title: 'Fastest Source', source: FASTEST_PRICE_SOURCE });
   priceSourceTest({ title: 'Aggregator Source', source: AGGREGATOR_PRICE_SOURCE });
-  // priceSourceTest({ title: 'Coingecko Source', source: COINGECKO_TOKEN_SOURCE }); Commented out because of rate limiting issues
+  // priceSourceTest({ title: 'Coingecko Source', source: COINGECKO_PRICE_SOURCE }); Commented out because of rate limiting issues
   // priceSourceTest({ title: 'Codex Source', source: CODEX_PRICE_SOURCE }); Commented out because of rate limiting issues
   priceSourceTest({ title: 'Alchemy Source', source: ALCHEMY_PRICE_SOURCE });
+  priceSourceTest({ title: 'Batch Source', source: BATCH_PRICE_SOURCE });
   function priceSourceTest({ title, source }: { title: string; source: IPriceSource }) {
     describe(title, () => {
       queryTest({
@@ -80,12 +83,14 @@ describe('Token Price Sources', () => {
         query: 'getHistoricalPrices',
         getResult: (source, tokens) =>
           source.getHistoricalPrices({
-            tokens,
-            timestamp: 1736294400, // Wednesday, January 8, 2025 12:00:00 AM
+            tokens: tokens.map((token) => ({
+              ...token,
+              timestamp: 1736294400, // Wednesday, January 8, 2025 12:00:00 AM
+            })),
             config: { timeout: '10s' },
             searchWidth: undefined,
           }),
-        validation: ({ price, closestTimestamp: timestamp }) => {
+        validation: ({ [1736294400]: { price, closestTimestamp: timestamp } }) => {
           expect(typeof price).to.equal('number');
           expect(typeof timestamp).to.equal('number');
         },

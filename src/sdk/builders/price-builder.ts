@@ -9,10 +9,10 @@ import { CoingeckoPriceSource } from '@services/prices/price-sources/coingecko-p
 import { PrioritizedPriceSource } from '@services/prices/price-sources/prioritized-price-source';
 import { FastestPriceSource } from '@services/prices/price-sources/fastest-price-source';
 import { AggregatorPriceSource, PriceAggregationMethod } from '@services/prices/price-sources/aggregator-price-source';
-
 import { CodexPriceSource } from '@services/prices/price-sources/codex-price-source';
 import { AlchemyPriceSource } from '@services/prices/price-sources/alchemy-price-source';
 import { AlchemySupportedChains } from '@services/providers/provider-sources/alchemy-provider';
+import { BatchConfig, BatchPriceSource } from '@services/prices/price-sources/batch-price-source';
 export type PriceSourceInput =
   | { type: 'defi-llama' }
   | { type: 'codex'; apiKey: string }
@@ -23,6 +23,7 @@ export type PriceSourceInput =
   | { type: 'fastest'; sources: PriceSourceInput[] }
   | { type: 'aggregate'; sources: PriceSourceInput[]; by: PriceAggregationMethod }
   | { type: 'cached'; underlyingSource: PriceSourceInput; config: CacheConfig }
+  | { type: 'batch'; underlyingSource: PriceSourceInput; config: BatchConfig }
   | { type: 'custom'; instance: IPriceSource };
 export type BuildPriceParams = { source: PriceSourceInput };
 
@@ -48,9 +49,14 @@ function buildSource(source: PriceSourceInput | undefined, { fetchService }: { f
       return new OdosPriceSource(fetchService);
     case 'coingecko':
       return coingecko;
-    case 'cached':
+    case 'cached': {
       const underlying = buildSource(source.underlyingSource, { fetchService });
       return new CachedPriceSource(underlying, source.config);
+    }
+    case 'batch': {
+      const underlying = buildSource(source.underlyingSource, { fetchService });
+      return new BatchPriceSource(underlying, source.config);
+    }
     case 'prioritized':
       return new PrioritizedPriceSource(source.sources.map((source) => buildSource(source, { fetchService })));
     case 'fastest':

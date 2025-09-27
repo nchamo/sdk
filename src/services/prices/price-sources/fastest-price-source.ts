@@ -37,32 +37,6 @@ export class FastestPriceSource implements IPriceSource {
 
   getHistoricalPrices({
     tokens,
-    timestamp,
-    searchWidth,
-    config,
-  }: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth?: TimeString;
-    config?: { timeout?: TimeString };
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    return executeFastest({
-      allSources: this.sources,
-      fullRequest: tokens,
-      query: 'getHistoricalPrices',
-      getResult: (source, filteredRequest, sourceTimeout) =>
-        source.getHistoricalPrices({
-          tokens: filteredRequest,
-          timestamp,
-          searchWidth,
-          config: { timeout: sourceTimeout },
-        }),
-      timeout: config?.timeout,
-    });
-  }
-
-  getBulkHistoricalPrices({
-    tokens,
     searchWidth,
     config,
   }: {
@@ -73,9 +47,9 @@ export class FastestPriceSource implements IPriceSource {
     return executeFastest({
       allSources: this.sources,
       fullRequest: tokens,
-      query: 'getBulkHistoricalPrices',
+      query: 'getHistoricalPrices',
       getResult: (source, filteredRequest, sourceTimeout) =>
-        source.getBulkHistoricalPrices({
+        source.getHistoricalPrices({
           tokens: filteredRequest,
           searchWidth,
           config: { timeout: sourceTimeout },

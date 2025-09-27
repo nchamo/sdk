@@ -109,7 +109,6 @@ describe('Aggregator Price Source', () => {
 
   function buildSource(prices: Record<TokenAddress, PriceResult>, chainId: ChainId = 1): IPriceSource {
     return {
-      getBulkHistoricalPrices: () => Promise.reject('Not supported'),
       getHistoricalPrices: () => Promise.reject('Not supported'),
       supportedQueries: () => ({
         [chainId]: { getHistoricalPrices: false, getCurrentPrices: true, getBulkHistoricalPrices: false, getChart: true },
@@ -121,7 +120,6 @@ describe('Aggregator Price Source', () => {
 
   function buildSourceThatFails(...onChain: ChainId[]): IPriceSource {
     return {
-      getBulkHistoricalPrices: () => Promise.reject('Not supported'),
       getHistoricalPrices: () => Promise.reject('Not supported'),
       supportedQueries: () =>
         Object.fromEntries(

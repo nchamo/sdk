@@ -16,7 +16,6 @@ export class OdosPriceSource implements IPriceSource {
     const support: PricesQueriesSupport = {
       getCurrentPrices: true,
       getHistoricalPrices: false,
-      getBulkHistoricalPrices: false,
       getChart: false,
     };
     const entries = SUPPORTED_CHAINS.map(({ chainId }) => chainId).map((chainId) => [chainId, support]);
@@ -40,15 +39,6 @@ export class OdosPriceSource implements IPriceSource {
   }
 
   getHistoricalPrices(_: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth: TimeString | undefined;
-    config: { timeout?: TimeString } | undefined;
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    return Promise.reject(new Error('Operation not supported'));
-  }
-
-  getBulkHistoricalPrices(_: {
     tokens: { chainId: ChainId; token: TokenAddress; timestamp: Timestamp }[];
     searchWidth: TimeString | undefined;
     config: { timeout?: TimeString } | undefined;

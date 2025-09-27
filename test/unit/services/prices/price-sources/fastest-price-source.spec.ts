@@ -218,7 +218,6 @@ function source({ chains }: { chains: ChainId[] }): {
   const sourcePromise = promise<Record<ChainId, Record<TokenAddress, PriceResult>>>();
   const source: IPriceSource = {
     getCurrentPrices: () => sourcePromise,
-    getBulkHistoricalPrices: () => Promise.reject('Not supported'),
     getHistoricalPrices: () => Promise.reject('Not supported'),
     getChart: () => Promise.reject('Not supported'),
     supportedQueries: () =>

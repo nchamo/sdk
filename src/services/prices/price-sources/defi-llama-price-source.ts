@@ -11,7 +11,7 @@ export class DefiLlamaPriceSource implements IPriceSource {
   }
 
   supportedQueries() {
-    const support: PricesQueriesSupport = { getCurrentPrices: true, getHistoricalPrices: true, getBulkHistoricalPrices: true, getChart: true };
+    const support: PricesQueriesSupport = { getCurrentPrices: true, getHistoricalPrices: true, getChart: true };
     const entries = this.defiLlama.supportedChains().map((chainId) => [chainId, support]);
     return Object.fromEntries(entries);
   }
@@ -32,25 +32,7 @@ export class DefiLlamaPriceSource implements IPriceSource {
     return result;
   }
 
-  async getHistoricalPrices(params: {
-    tokens: PriceInput[];
-    timestamp: Timestamp;
-    searchWidth: TimeString | undefined;
-    config: { timeout?: TimeString } | undefined;
-  }): Promise<Record<ChainId, Record<TokenAddress, PriceResult>>> {
-    const result: Record<ChainId, Record<TokenAddress, PriceResult>> = {};
-    const data = await this.defiLlama.getHistoricalTokenData(params);
-    for (const [chainIdString, tokens] of Object.entries(data)) {
-      const chainId = Number(chainIdString);
-      result[chainId] = {};
-      for (const [address, { price, timestamp }] of Object.entries(tokens)) {
-        result[chainId][address] = { price, closestTimestamp: timestamp };
-      }
-    }
-    return result;
-  }
-
-  async getBulkHistoricalPrices({
+  async getHistoricalPrices({
     tokens,
     searchWidth,
     config,
