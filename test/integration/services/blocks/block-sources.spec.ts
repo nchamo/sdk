@@ -41,7 +41,7 @@ const ALCHEMY_BLOCK_SOURCE = new AlchemyBlockSource({
 });
 
 jest.retryTimes(2);
-jest.setTimeout(ms('2m'));
+jest.setTimeout(ms('3m'));
 
 describe('Blocks Sources', () => {
   // blocksSourceTest({ title: 'Defi Llama Source', source: DEFI_LLAMA_BLOCKS_SOURCE }); DefiLlama is not passing tests since they sometimes return a block that is not exactly the closed, but the second closest
