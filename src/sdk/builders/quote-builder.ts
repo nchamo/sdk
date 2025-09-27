@@ -19,6 +19,7 @@ import {
 
 export type QuoteSourceListInput =
   | { type: 'custom'; instance: IQuoteSourceList }
+  | { type: 'custom-with-underlying'; underlyingSource: QuoteSourceListInput; build: (underlying: IQuoteSourceList) => IQuoteSourceList }
   | { type: 'local' }
   | {
       type: 'batch-api';
@@ -71,6 +72,10 @@ function buildList(
   switch (list?.type) {
     case 'custom':
       return list.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildList(list.underlyingSource, { fetchService, providerService });
+      return list.build(underlying);
+    }
     case 'local':
     case undefined:
       return new LocalSourceList({

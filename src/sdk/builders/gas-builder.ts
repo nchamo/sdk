@@ -34,7 +34,8 @@ export type GasSourceInput =
     }
   | { type: 'owlracle'; key: string }
   | { type: 'etherscan'; keys?: Record<ChainId, string> }
-  | { type: 'custom'; instance: IGasPriceSource<any> }
+  | { type: 'custom'; instance: IGasPriceSource<object> }
+  | { type: 'custom-with-underlying'; underlyingSource: GasSourceInput; build: (underlying: IGasPriceSource<object>) => IGasPriceSource<object> }
   | { type: 'fastest'; sources: SingleSourceInput[] }
   | { type: 'aggregate'; sources: SingleSourceInput[]; by: GasPriceAggregationMethod }
   | { type: 'prioritized'; sources: SingleSourceInput[] };
@@ -117,6 +118,10 @@ function buildSource(
       return new OwlracleGasPriceSource(fetchService, source.key);
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource, { logsService, fetchService, providerService });
+      return source.build(underlying);
+    }
     case 'aggregate':
       return new AggregatorGasPriceSource(
         logsService,

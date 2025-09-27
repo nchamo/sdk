@@ -9,6 +9,7 @@ import { AlchemyBlockSource } from '@services/blocks/block-sources/alchemy-block
 
 export type BlocksSourceInput =
   | { type: 'custom'; instance: IBlocksSource }
+  | { type: 'custom-with-underlying'; underlyingSource: BlocksSourceInput; build: (underlying: IBlocksSource) => IBlocksSource }
   | { type: 'defi-llama' }
   | { type: 'rpc' }
   | { type: 'alchemy'; apiKey: string }
@@ -40,5 +41,9 @@ function buildSource(
       return new FallbackBlockSource(source.sources.map((source) => buildSource(source, { fetchService, providerService })));
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource, { fetchService, providerService });
+      return source.build(underlying);
+    }
   }
 }
