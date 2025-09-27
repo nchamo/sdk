@@ -24,7 +24,9 @@ export type PriceSourceInput =
   | { type: 'aggregate'; sources: PriceSourceInput[]; by: PriceAggregationMethod }
   | { type: 'cached'; underlyingSource: PriceSourceInput; config: CacheConfig }
   | { type: 'batch'; underlyingSource: PriceSourceInput; config: BatchConfig }
-  | { type: 'custom'; instance: IPriceSource };
+  | { type: 'custom'; instance: IPriceSource }
+  | { type: 'custom-with-underlying'; underlyingSource: PriceSourceInput; build: (underlying: IPriceSource) => IPriceSource };
+
 export type BuildPriceParams = { source: PriceSourceInput };
 
 export function buildPriceService(params: BuildPriceParams | undefined, fetchService: IFetchService): IPriceService {
@@ -68,5 +70,9 @@ function buildSource(source: PriceSourceInput | undefined, { fetchService }: { f
       );
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource, { fetchService });
+      return source.build(underlying);
+    }
   }
 }

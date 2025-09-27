@@ -13,6 +13,7 @@ export type BalanceSourceInput =
   | { type: 'rpc-multicall'; config?: RPCBalanceSourceConfig; customProvider?: BuildProviderParams }
   | { type: 'cached'; underlyingSource: BalanceSourceInput; config: CacheConfig }
   | { type: 'custom'; instance: IBalanceSource }
+  | { type: 'custom-with-underlying'; underlyingSource: BalanceSourceInput; build: (underlying: IBalanceSource) => IBalanceSource }
   | { type: 'fastest'; sources: BalanceSourceInput[] };
 export type BuildBalancesParams = { source: BalanceSourceInput };
 
@@ -40,6 +41,10 @@ function buildSource(
       return new CachedBalanceSource(underlying, source.config);
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource, { fetchService, providerService, logsService });
+      return source.build(underlying);
+    }
     case 'fastest':
       return new FastestBalanceSource(
         source.sources.map((source) => buildSource(source, { fetchService, providerService, logsService })),

@@ -26,6 +26,7 @@ export type { ProviderConfig } from '@services/providers/provider-service';
 export type BuildProviderParams = { source: ProviderSourceInput; config?: ProviderConfig };
 export type ProviderSourceInput =
   | { type: 'custom'; instance: IProviderSource }
+  | { type: 'custom-with-underlying'; underlyingSource: ProviderSourceInput; build: (underlying: IProviderSource) => IProviderSource }
   | { type: 'public-rpcs'; rpcsPerChain?: Record<ChainId, string[]>; config?: PublicRPCsProviderSourceConfig }
   | { type: 'infura'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'node-real'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
@@ -57,6 +58,10 @@ function buildSource(source?: ProviderSourceInput): IProviderSource {
       return new PublicRPCsProviderSource();
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource);
+      return source.build(underlying);
+    }
     case 'public-rpcs':
       return new PublicRPCsProviderSource({ publicRPCs: source.rpcsPerChain, config: source.config });
     case 'moralis':

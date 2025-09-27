@@ -13,6 +13,11 @@ export type MetadataSourceInput =
   | { type: 'rpc-multicall' }
   | { type: 'cached'; underlyingSource: Exclude<MetadataSourceInput, { type: 'cached' }>; config: CacheConfig }
   | { type: 'custom'; instance: IMetadataSource<object> }
+  | {
+      type: 'custom-with-underlying';
+      underlyingSource: MetadataSourceInput;
+      build: (underlying: IMetadataSource<object>) => IMetadataSource<object>;
+    }
   | { type: 'aggregate'; sources: MetadataSourceInput[] };
 
 export type BuildMetadataParams = { source: MetadataSourceInput };
@@ -69,6 +74,10 @@ function buildSource<T extends MetadataSourceInput>(
       return new RPCMetadataSource(providerService);
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource, { fetchService, providerService });
+      return source.build(underlying);
+    }
     case 'aggregate':
       return new FallbackMetadataSource(source.sources.map((source) => buildSource(source, { fetchService, providerService })));
   }

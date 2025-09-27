@@ -9,7 +9,9 @@ import { IProviderService } from '@services/providers';
 export type AllowanceSourceInput =
   | { type: 'rpc-multicall' }
   | { type: 'cached'; underlyingSource: AllowanceSourceInput; config: CacheConfig }
-  | { type: 'custom'; instance: IAllowanceSource };
+  | { type: 'custom'; instance: IAllowanceSource }
+  | { type: 'custom-with-underlying'; underlyingSource: AllowanceSourceInput; build: (underlying: IAllowanceSource) => IAllowanceSource };
+
 export type BuildAllowanceParams = { source: AllowanceSourceInput };
 
 export function buildAllowanceService(
@@ -34,5 +36,9 @@ function buildSource(
       return new CachedAllowanceSource(underlying, source.config);
     case 'custom':
       return source.instance;
+    case 'custom-with-underlying': {
+      const underlying = buildSource(source.underlyingSource, { fetchService, providerService });
+      return source.build(underlying);
+    }
   }
 }
