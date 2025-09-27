@@ -12,6 +12,7 @@ import { ProviderService } from '@services/providers/provider-service';
 import { PublicRPCsProviderSource } from '@services/providers/provider-sources/public-rpcs-provider';
 import { FallbackBlockSource } from '@services/blocks/block-sources/fallback-block-source';
 import { AlchemyBlockSource } from '@services/blocks/block-sources/alchemy-block-source';
+import { AlchemyProviderSource } from '@services/providers/provider-sources/alchemy-provider';
 dotenv.config();
 chai.use(chaiAsPromised);
 
@@ -29,7 +30,9 @@ const TESTS: Record<ChainId, Timestamp[]> = {
   ],
 };
 
-const PROVIDER_SERVICE = new ProviderService({ source: new PublicRPCsProviderSource() });
+const PROVIDER_SERVICE = new ProviderService({
+  source: process.env.ALCHEMY_API_KEY ? new AlchemyProviderSource({ key: process.env.ALCHEMY_API_KEY }) : new PublicRPCsProviderSource(),
+});
 const FETCH_SERVICE = new FetchService();
 const DEFI_LLAMA_BLOCKS_SOURCE = new DefiLlamaBlockSource(FETCH_SERVICE, PROVIDER_SERVICE);
 const RPC_BLOCKS_SOURCE = new RPCBlockSource(PROVIDER_SERVICE);
