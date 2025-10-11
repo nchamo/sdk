@@ -57,14 +57,18 @@ export class RPCMetadataSource implements IMetadataSource<RPCMetadataProperties>
     const multicallResults = contracts.length
       ? await this.providerService
           .getViemPublicClient({ chainId })
-          .multicall({ contracts, allowFailure: false, multicallAddress: MULTICALL_CONTRACT.address(chainId), batchSize: 0 })
+          .multicall({ contracts, allowFailure: true, multicallAddress: MULTICALL_CONTRACT.address(chainId), batchSize: 0 })
       : [];
     const result: Record<TokenAddress, MetadataResult<RPCMetadataProperties, Requirements>> = {};
     for (let i = 0; i < addressesWithoutNativeToken.length; i++) {
       const address = addressesWithoutNativeToken[i];
-      const tokenMetadata = Object.fromEntries(
-        fieldsToFetch.map((field, j) => [field, multicallResults[addressesWithoutNativeToken.length * j + i]])
-      ) as MetadataResult<RPCMetadataProperties, Requirements>;
+      const tokenMetadata = {} as MetadataResult<RPCMetadataProperties, Requirements>;
+      fieldsToFetch.forEach((field, j) => {
+        const result = multicallResults[addressesWithoutNativeToken.length * j + i];
+        if (result.status === 'success') {
+          tokenMetadata[field] = result.result as any;
+        }
+      });
       result[address] = tokenMetadata;
     }
 
