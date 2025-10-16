@@ -5,7 +5,7 @@ import { TimeoutError } from '@shared/timeouts';
 import { wait } from '@shared/wait';
 
 export class FetchService implements IFetchService {
-  constructor(private readonly realFetch: Fetch = crossFetch) {}
+  constructor(private readonly realFetch?: Fetch) {}
 
   async fetch(url: RequestInfo | URL, init?: RequestInit) {
     const { retries = 0, retryDelay = 1000, retryWhenTimeouted = true, timeout: timeoutText = '5m', ...restInit } = init ?? {};
@@ -21,7 +21,7 @@ export class FetchService implements IFetchService {
       }, ms(timeoutText));
 
       try {
-        const response = await this.realFetch(url, {
+        const response = await (this.realFetch ?? crossFetch)(url, {
           ...restInit,
           signal: controller.signal as AbortSignal,
         });
