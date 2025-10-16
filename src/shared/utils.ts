@@ -6,8 +6,8 @@ export function isSameAddress(address1: Address | undefined, address2: Address |
   return !!address1 && !!address2 && address1.toLowerCase() === address2.toLowerCase();
 }
 
-export function toLower(text: string): Lowercase<string> {
-  return text.toLowerCase() as Lowercase<string>;
+export function toLower<TString extends string>(text: TString): Lowercase<TString> {
+  return text.toLowerCase() as Lowercase<TString>;
 }
 
 export function subtractPercentage(amount: BigIntish, slippagePercentage: number, rounding: 'up' | 'down'): bigint {
