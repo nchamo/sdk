@@ -38,6 +38,7 @@ const CHAIN_ID_TO_KEY: Record<ChainId, Lowercase<string>> = {
   [Chains.MANTLE.chainId]: 'mantle',
   [Chains.METIS_ANDROMEDA.chainId]: 'metis',
   [Chains.SONIC.chainId]: 'sonic',
+  [Chains.PLASMA.chainId]: 'plasma',
 };
 
 const KEY_TO_CHAIN_ID: Record<string, ChainId> = Object.fromEntries(

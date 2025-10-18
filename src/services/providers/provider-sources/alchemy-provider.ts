@@ -2,8 +2,7 @@ import { ChainId } from '@types';
 import { BaseHttpProvider, HttpProviderConfig } from './base/base-http-provider';
 import { ALCHEMY_NETWORKS } from '@shared/alchemy';
 
-export type AlchemySupportedChains = AlchemyDefaultChains | ChainId[];
-type AlchemyDefaultChains = { allInTier: 'free tier' | 'paid tier'; except?: ChainId[] };
+export type AlchemySupportedChains = ChainId[];
 
 export class AlchemyProviderSource extends BaseHttpProvider {
   private readonly key: string;
@@ -17,8 +16,7 @@ export class AlchemyProviderSource extends BaseHttpProvider {
     } else if (Array.isArray(onChains)) {
       this.supported = onChains;
     } else {
-      const chains = alchemySupportedChains({ onlyFree: onChains.allInTier === 'free tier' });
-      this.supported = onChains.except ? chains.filter((chain) => !onChains.except!.includes(chain)) : chains;
+      this.supported = alchemySupportedChains();
     }
   }
 
@@ -31,17 +29,8 @@ export class AlchemyProviderSource extends BaseHttpProvider {
   }
 }
 
-export function alchemySupportedChains(args?: { onlyFree?: boolean }): ChainId[] {
-  return Object.entries(ALCHEMY_NETWORKS)
-    .filter(
-      ([
-        _,
-        {
-          rpc: { tier },
-        },
-      ]) => tier === 'free' || !args?.onlyFree
-    )
-    .map(([chainId]) => Number(chainId));
+export function alchemySupportedChains(): ChainId[] {
+  return Object.entries(ALCHEMY_NETWORKS).map(([chainId]) => Number(chainId));
 }
 
 export function buildAlchemyRPCUrl({ chainId, apiKey, protocol }: { chainId: ChainId; apiKey: string; protocol: 'https' | 'wss' }) {
