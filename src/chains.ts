@@ -521,6 +521,15 @@ export const Chains = {
     publicRPCs: ['https://zksync.meowrpc.com', 'https://mainnet.era.zksync.io'],
     explorer: 'https://explorer.zksync.io/',
   },
+  PLASMA: {
+    chainId: 9745,
+    name: 'Plasma',
+    ids: ['plasma'],
+    nativeCurrency: { symbol: 'XPL', name: 'Plasma' },
+    wToken: '0x6100e367285b01f48d07953803a2d8dca5d19873',
+    publicRPCs: ['https://rpc.plasma.to', 'https://plasma.drpc.org'],
+    explorer: 'https://plasmascan.to/',
+  },
   ETHEREUM_GOERLI: {
     chainId: 5,
     name: 'Ethereum Goerli',
