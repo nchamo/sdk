@@ -38,6 +38,8 @@ const CHAIN_ID_TO_KEY: Record<ChainId, Lowercase<string>> = {
   [Chains.MANTLE.chainId]: 'mantle',
   [Chains.METIS_ANDROMEDA.chainId]: 'metis',
   [Chains.SONIC.chainId]: 'sonic',
+  [Chains.PLASMA.chainId]: 'plasma',
+  [Chains.UNICHAIN.chainId]: 'unichain',
 };
 
 const KEY_TO_CHAIN_ID: Record<string, ChainId> = Object.fromEntries(
@@ -249,6 +251,7 @@ export class DefiLlamaClient {
 const DEFI_LLAMA_NATIVE_TOKEN = '0x0000000000000000000000000000000000000000';
 const MAPPINGS: Record<Lowercase<TokenId>, Lowercase<TokenId>> = {
   'polygon:0x2791bca1f2de4661ed88a30c99a7a9449aa84174': 'polygon:0x3c499c542cef5e3811e1192ce70d8cc03d5c3359', // Bridged USDC (USDC.e): Native USDC
+  [`polygon:${DEFI_LLAMA_NATIVE_TOKEN}`]: 'polygon:0x0000000000000000000000000000000000001010', // POL
   'arbitrum:0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': 'arbitrum:0xaf88d065e77c8cc2239327c5edb3a432268e5831', // Bridged USDC (USDC.e): Native USDC
   'optimism:0x7f5c764cbc14f9669b88837ca1490cca17c31607': 'optimism:0x0b2c639c533813f4aa9d7837caf62653d097ff85', // Bridged USDC (USDC.e): Native USDC
 };

@@ -21,8 +21,7 @@ export class AlchemyPriceSource implements IPriceSource {
     } else if (Array.isArray(onChains)) {
       this.supported = onChains;
     } else {
-      const chains = alchemySupportedChains({ onlyFree: onChains.allInTier === 'free tier' });
-      this.supported = onChains.except ? chains.filter((chain) => !onChains.except!.includes(chain)) : chains;
+      this.supported = alchemySupportedChains();
     }
   }
 
