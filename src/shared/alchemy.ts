@@ -30,4 +30,5 @@ export const ALCHEMY_NETWORKS: Record<ChainId, { key: string; price: { supported
   [Chains.ZK_SYNC_ERA.chainId]: { key: 'zksync-mainnet', price: { supported: true }, blocks: { supported: true } },
   [Chains.CELO.chainId]: { key: 'celo-mainnet', price: { supported: false }, blocks: { supported: true } },
   [Chains.PLASMA.chainId]: { key: 'plasma-mainnet', price: { supported: false }, blocks: { supported: false } },
+  [Chains.UNICHAIN.chainId]: { key: 'unichain-mainnet', price: { supported: false }, blocks: { supported: false } },
 };

@@ -530,6 +530,21 @@ export const Chains = {
     publicRPCs: ['https://rpc.plasma.to', 'https://plasma.drpc.org'],
     explorer: 'https://plasmascan.to/',
   },
+  UNICHAIN: {
+    chainId: 130,
+    name: 'Unichain',
+    ids: ['unichain'],
+    nativeCurrency: { symbol: 'ETH', name: 'Ethereum' },
+    wToken: '0x4200000000000000000000000000000000000006',
+    publicRPCs: [
+      'https://mainnet.unichain.org',
+      'https://unichain-rpc.publicnode.com',
+      'https://unichain.drpc.org',
+      'https://0xrpc.io/uni',
+      'https://unichain.therpc.io',
+    ],
+    explorer: 'https://uniscan.xyz/',
+  },
   ETHEREUM_GOERLI: {
     chainId: 5,
     name: 'Ethereum Goerli',

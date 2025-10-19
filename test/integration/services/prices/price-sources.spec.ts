@@ -85,17 +85,17 @@ describe('Token Price Sources', () => {
           source.getHistoricalPrices({
             tokens: tokens.map((token) => ({
               ...token,
-              timestamp: 1736294400, // Wednesday, January 8, 2025 12:00:00 AM
+              timestamp: 1760054400, // Sat, 10 Oct 2025 00:00:00 GMT
             })),
             config: { timeout: '10s' },
             searchWidth: undefined,
           }),
-        validation: ({ [1736294400]: { price, closestTimestamp: timestamp } }) => {
+        validation: ({ [1760054400]: { price, closestTimestamp: timestamp } }) => {
           expect(typeof price).to.equal('number');
           expect(typeof timestamp).to.equal('number');
         },
       });
-      const from = 1736294400; // Wednesday, January 8, 2025 12:00:00 AM
+      const from = 1760054400; // Sat, 10 Oct 2025 00:00:00 GMT
       const span = 5;
       const period = '1d';
       queryTest({
