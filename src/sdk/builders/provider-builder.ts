@@ -22,6 +22,7 @@ import { AlchemyProviderSource, AlchemySupportedChains } from '@services/provide
 import { MoralisProviderSource } from '@services/providers/provider-sources/moralis-provider';
 import { ThirdWebProviderSource } from '@services/providers/provider-sources/third-web-provider';
 import { EnvioProviderSource } from '@services/providers/provider-sources/envio-provider';
+import { ByMethodProviderSource } from '@services/providers/provider-sources/by-method-provider';
 export type { ProviderConfig } from '@services/providers/provider-service';
 
 export type BuildProviderParams = { source: ProviderSourceInput; config?: ProviderConfig };
@@ -47,6 +48,7 @@ export type ProviderSourceInput =
   | { type: 'web-socket'; url: string; supportedChains: ChainId[] }
   | { type: 'fallback'; sources: ProviderSourceInput[]; config?: FallbackProviderSourceConfig }
   | { type: 'load-balance'; sources: ProviderSourceInput[]; config?: LoadBalanceProviderSourceConfig }
+  | { type: 'by-method'; default: ProviderSourceInput; byMethod: Record<string, ProviderSourceInput> }
   | { type: 'prioritized'; sources: ProviderSourceInput[] };
 
 export function buildProviderService(params?: BuildProviderParams) {
@@ -66,6 +68,11 @@ function buildSource(source?: ProviderSourceInput): IProviderSource {
     }
     case 'public-rpcs':
       return new PublicRPCsProviderSource({ publicRPCs: source.rpcsPerChain, config: source.config });
+    case 'by-method': {
+      const defaultSource = buildSource(source.default);
+      const byMethod = Object.fromEntries(Object.entries(source.byMethod).map(([method, source]) => [method, buildSource(source)]));
+      return new ByMethodProviderSource(defaultSource, byMethod);
+    }
     case 'moralis':
       return new MoralisProviderSource(source);
     case 'dRPC':
