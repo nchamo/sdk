@@ -30,7 +30,7 @@ export type ProviderSourceInput =
   | { type: 'custom-with-underlying'; underlyingSource: ProviderSourceInput; build: (underlying: IProviderSource) => IProviderSource }
   | { type: 'public-rpcs'; rpcsPerChain?: Record<ChainId, string[]>; config?: PublicRPCsProviderSourceConfig }
   | { type: 'infura'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
-  | { type: 'envio'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
+  | { type: 'envio'; key?: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'node-real'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'dRPC'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'alchemy'; key: string; onChains?: AlchemySupportedChains; config?: HttpProviderConfig }
