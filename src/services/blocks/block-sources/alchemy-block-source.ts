@@ -33,6 +33,7 @@ export class AlchemyBlockSource implements IBlocksSource {
     const grouped = groupByTimestamp(timestamps);
     const promises = Object.entries(grouped).map(async ([timestamp, chains]) => {
       const queryParams = {
+        // TODO: Alchemy added a limit of networks. Max is 3. We would need to split the request
         networks: chains.map((chainId) => ALCHEMY_NETWORKS[chainId].key),
         timestamp,
         direction: 'AFTER',

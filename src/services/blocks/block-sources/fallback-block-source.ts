@@ -17,6 +17,7 @@ export class FallbackBlockSource implements IBlocksSource {
     timestamps: BlockInput[];
     config?: { timeout?: TimeString };
   }): Promise<Record<ChainId, Record<Timestamp, BlockResult>>> {
+    // TODO: we need to split the input by supported chains. Not all sources might support all chains
     const errors: Error[] = [];
     for (const source of this.sources) {
       try {
