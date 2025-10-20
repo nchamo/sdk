@@ -21,6 +21,7 @@ import { OneRPCProviderSource } from '@services/providers/provider-sources/one-r
 import { AlchemyProviderSource, AlchemySupportedChains } from '@services/providers/provider-sources/alchemy-provider';
 import { MoralisProviderSource } from '@services/providers/provider-sources/moralis-provider';
 import { ThirdWebProviderSource } from '@services/providers/provider-sources/third-web-provider';
+import { EnvioProviderSource } from '@services/providers/provider-sources/envio-provider';
 export type { ProviderConfig } from '@services/providers/provider-service';
 
 export type BuildProviderParams = { source: ProviderSourceInput; config?: ProviderConfig };
@@ -29,6 +30,7 @@ export type ProviderSourceInput =
   | { type: 'custom-with-underlying'; underlyingSource: ProviderSourceInput; build: (underlying: IProviderSource) => IProviderSource }
   | { type: 'public-rpcs'; rpcsPerChain?: Record<ChainId, string[]>; config?: PublicRPCsProviderSourceConfig }
   | { type: 'infura'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
+  | { type: 'envio'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'node-real'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'dRPC'; key: string; onChains?: ChainId[]; config?: HttpProviderConfig }
   | { type: 'alchemy'; key: string; onChains?: AlchemySupportedChains; config?: HttpProviderConfig }
@@ -70,6 +72,8 @@ function buildSource(source?: ProviderSourceInput): IProviderSource {
       return new dRPCProviderSource(source);
     case 'third-web':
       return new ThirdWebProviderSource(source);
+    case 'envio':
+      return new EnvioProviderSource(source);
     case 'alchemy':
       return new AlchemyProviderSource(source);
     case 'blast':

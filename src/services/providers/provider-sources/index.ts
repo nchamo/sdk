@@ -14,3 +14,4 @@ export { buildOnFinalityRPCUrl, onFinalitySupportedChains } from './on-finality-
 export { buildOneRPCUrl, oneRPCSupportedChains } from './one-rpc-provider';
 export { buildMoralisRPCUrl, moralisSupportedChains } from './moralis-provider';
 export { buildThirdWebRPCUrl, thirdWebSupportedChains } from './third-web-provider';
+export { buildEnvioRPCUrl, envioSupportedChains } from './envio-provider';
