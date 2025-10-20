@@ -2,7 +2,10 @@ import { http, HttpTransportConfig } from 'viem';
 import { ChainId } from '@types';
 import { IProviderSource } from '@services/providers/types';
 
-export type HttpProviderConfig = Pick<HttpTransportConfig, 'batch'>;
+export type HttpProviderConfig = Pick<
+  HttpTransportConfig,
+  'batch' | 'fetchOptions' | 'onFetchRequest' | 'onFetchResponse' | 'methods' | 'retryCount' | 'retryDelay' | 'timeout'
+>;
 export abstract class BaseHttpProvider implements IProviderSource {
   constructor(private readonly config: HttpProviderConfig | undefined) {}
 
