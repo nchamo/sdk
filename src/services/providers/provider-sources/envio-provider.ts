@@ -71,5 +71,5 @@ export function envioSupportedChains(): ChainId[] {
 }
 
 export function buildEnvioRPCUrl({ chainId, apiKey }: { chainId: ChainId; apiKey?: string }) {
-  return `https://${chainId}.hypersync.xyz/${apiKey}`;
+  return `https://${chainId}.rpc.hypersync.xyz/${apiKey}`;
 }
